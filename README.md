@@ -1,2 +1,0 @@
-# bacsystem-tutorials
-bacsystem-tutorials

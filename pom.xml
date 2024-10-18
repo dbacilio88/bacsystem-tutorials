@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.bacsystem</groupId>
+        <artifactId>parent-modules</artifactId>
+        <version>1.0.0</version>
+        <relativePath>parent-modules</relativePath>
+    </parent>
+
+    <artifactId>bacsystem-tutorials</artifactId>
+    <version>1.0.0</version>
+    <description>${project.artifactId}</description>
+    <name>${project.artifactId}</name>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>web-services-soap</module>
+        <module>parent-spring-2</module>
+        <module>parent-modules</module>
+    </modules>
+
+    <properties>
+        <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
+    </properties>
+
+
+</project>
+
+
