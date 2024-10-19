@@ -37,6 +37,22 @@ jobs:
           distribution: 'temurin'
           server-id: github
           settings-path: ${{ github.workspace }}
+      - uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          repositories: >
+            [
+              { "id": "github",
+                "url": "https://maven.pkg.github.com/dbacilio88/lib-web-services-soap"
+              }
+            ]
+          servers: >
+            [
+              {
+                "id":"github",
+                "username":"${{ github.actor }}",
+                "password":"${{ secrets.GITHUB_TOKEN }}"
+              }
+            ]
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
