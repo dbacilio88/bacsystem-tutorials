@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 @Log4j2
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "soap-integration-services")
+@ConfigurationProperties(prefix = "soap-integration-events")
 public class MicroserviceSoapConfiguration {
 
     private SoapParameter parameter;

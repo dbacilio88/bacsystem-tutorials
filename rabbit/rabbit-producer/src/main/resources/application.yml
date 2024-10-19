@@ -1,0 +1,106 @@
+# app server configuration:
+server:
+  port: 8001
+  compression:
+    enabled: false
+  tomcat:
+    uri-encoding: UTF-8
+
+  error:
+    include-stacktrace: never
+  #netty:
+  #  idle-timeout: 5000
+  #  connection-timeout: 6000
+  servlet:
+    context-path: /api-microservice-application/v1
+
+# app spring configuration:
+spring:
+  application:
+    name: api-microservice-application
+  banner:
+    location: 'classpath:/banner.txt'
+  #main:
+  #  banner-mode: log
+  #  lazy-initialization: false
+  #mvc:
+  #  converters:
+  #    preferred-json-mapper: jsonb
+# app logging configuration:
+logging:
+  level:
+
+    com.bacsystem: info
+    root: info
+    org:
+      springframework:
+        boot:
+          webservices: trace
+      hibernate:
+        sql: info
+        type: info
+    web: info
+    sql: info
+
+# app swagger configuration
+springdoc:
+  api-docs:
+    enabled: true
+# app health configuration:
+management:
+  info:
+    git:
+      enabled: true
+      mode: full
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    db:
+      enabled: true
+    liveness-state:
+      enabled: true
+    readiness-state:
+      enabled: true
+
+# Broker Configuration producer
+broker-configuration:
+
+  common-configuration:
+    queue-name: HOSTNAME-CORE
+    routing-key-origin: CORE-RABBIT
+    broker-declare-exchange: EX-BROKER-RABBIT
+    broker-declare-exchange-type: TOPIC
+
+  broker-response-consumer:
+    queue: QU-CORE-RABBIT-RESPONSE-TRANSACTION-${broker-configuration.common-configuration.queue-name}
+    command: RESPONSE
+    routing-key: SERVICE.CONNECTOR-RABBIT.${broker-configuration.common-configuration.routing-key-origin}.TRANSACTION.RESPONSE
+    routing-domain: TRANSACTION
+    routing-key-origin: CONNECTOR-RABBIT
+    routing-key-destiny: ${broker-configuration.common-configuration.routing-key-origin}
+
+  broker-request-producer:
+    command: REQUEST
+    routing-key: SERVICE.${broker-configuration.common-configuration.routing-key-origin}.CONNECTOR-RABBIT.TRANSACTION.REQUEST
+    routing-domain: TRANSACTION
+    routing-key-origin: ${broker-configuration.common-configuration.routing-key-origin}
+    routing-key-destiny: CONNECTOR-RABBIT
+
+# SOAP Configuration
+soap-integration-services:
+  global-configuration:
+    base-service-uri: http://www.dneonline.com
+  mutual-configuration:
+    mutual-enable: true
+    client-keystore-path: path
+    client-keystore-password: 123
+    server-truststore-path: path
+    server-truststore-password: 123
+  parameter:
+    service-uri: ${soap-integration-services.global-configuration.base-service-uri}/calculator.asmx
+    service-generator-wsdl-path: com.bacsystem.connectors.wsdl.calculator
+    service-soap-action: http://tempuri.org/Add
+    service-description: consultar
+    is-ssl: false

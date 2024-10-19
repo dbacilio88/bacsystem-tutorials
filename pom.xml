@@ -33,6 +33,8 @@
         <module>parent-spring-2</module>
         <module>parent-modules</module>
         <module>grpc</module>
+        <module>rabbit</module>
+        <module>parent-spring-3</module>
     </modules>
 
     <properties>
