@@ -23,9 +23,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # strategy:
-    #  matrix:
-    #    java-version: [ '8','11','17','21' ]
     permissions:
       contents: read
       packages: write
@@ -40,18 +37,14 @@ jobs:
       - name: Get Java version from pom.xml
         id: get_java_version
         run: |
-          # Buscar la propiedad java.version en todos los pom.xml del proyecto
           JAVA_VERSION=""
           for pom in $(find . -name "pom.xml"); do
-            version=$(xmllint --xpath "string(//properties/java.version)" $pom)
+            version=$(xmllint --xpath "string(//properties/java.version | //java.version)" $pom)
             if [ ! -z "$version" ] && [ "$JAVA_VERSION" != "$version" ]; then
               echo "Found java.version $version in $pom"
-              # Si ya tenemos una versión, la vamos a sobrescribir solo si es más reciente
-            JAVA_VERSION=$version
+              JAVA_VERSION=$version
             fi
           done
-          
-          # Si no encontramos ninguna versión, fallar el flujo de trabajo
           
           if [ -z "$JAVA_VERSION" ]; then
             echo "No java.version found in any pom.xml"
@@ -61,40 +54,31 @@ jobs:
           echo "Using Java version: $JAVA_VERSION"
           echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
 
-      - name: Verify Java version
-        run: java -version
-
-      #- name: Set up JDK ${{ matrix.java-version }}
       - name: Set up JDK based on pom.xml version
         uses: actions/setup-java@v4
         with:
-          #java-version: ${{ matrix.java-version }}
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
-          server-id: github
-          settings-path: ${{ github.workspace }}
-      - uses: whelk-io/maven-settings-xml-action@v22
+
+      - name: Configure Maven settings
+        uses: whelk-io/maven-settings-xml-action@v22
         with:
           repositories: >
             [
-              { "id": "lib-web-services-soap",
-                "url": "https://maven.pkg.github.com/dbacilio88/lib-web-services-soap"
-              },
-              { "id": "lib-messaging-rabbit-mq",
-                "url": "https://maven.pkg.github.com/dbacilio88/lib-messaging-rabbit-mq"
-              }
+              { "id": "lib-web-services-soap", "url": "https://maven.pkg.github.com/dbacilio88/lib-web-services-soap" },
+              { "id": "lib-messaging-rabbit-mq", "url": "https://maven.pkg.github.com/dbacilio88/lib-messaging-rabbit-mq" }
             ]
           servers: >
             [
               {
-                "id":"lib-web-services-soap",
-                "username":"${{ github.actor }}",
-                "password":"${{ secrets.GITHUB_TOKEN }}"
+                "id": "lib-web-services-soap",
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
               },
               {
-                "id":"lib-messaging-rabbit-mq",
-                "username":"${{ github.actor }}",
-                "password":"${{ secrets.GITHUB_TOKEN }}"
+                "id": "lib-messaging-rabbit-mq",
+                "username": "${{ github.actor }}",
+                "password": "${{ secrets.GITHUB_TOKEN }}"
               }
             ]
 
@@ -102,7 +86,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Publish to GitHub Packages Apache Maven
-        if: github.event_name == 'release' # Solo se ejecuta en releases
+        if: github.event_name == 'release'
         run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
