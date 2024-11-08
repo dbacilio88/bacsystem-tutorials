@@ -23,20 +23,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java-version: [ '8','11','17','21' ]
+    # strategy:
+    #  matrix:
+    #    java-version: [ '8','11','17','21' ]
     permissions:
       contents: read
       packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Set up JDK ${{ matrix.java-version }}
+      - name: Get Java version from pom.xml
+        id: get_java_version
+        run: |
+          JAVA_VERSION=$(mvn help:evaluate -Dexpression=java.version -q -DforceStdout)
+          if [ -z "$JAVA_VERSION" ] || [ "$JAVA_VERSION" == "null" ]; then
+            # Fall back to maven.compiler.source if java.version is not defined
+            JAVA_VERSION=$(mvn help:evaluate -Dexpression=maven.compiler.source -q -DforceStdout)
+          fi
+          echo "Java version from pom.xml is $JAVA_VERSION"
+          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+
+      - name: Verify Java version
+        run: java -version
+
+      #- name: Set up JDK ${{ matrix.java-version }}
+      - name: Set up JDK based on pom.xml version
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java-version }}
+          #java-version: ${{ matrix.java-version }}
+          java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           server-id: github
           settings-path: ${{ github.workspace }}
