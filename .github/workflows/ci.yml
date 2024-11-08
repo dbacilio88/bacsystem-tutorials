@@ -44,10 +44,10 @@ jobs:
         with:
           repositories: >
             [
-              { "id": "github",
+              { "id": "lib-web-services-soap",
                 "url": "https://maven.pkg.github.com/dbacilio88/lib-web-services-soap"
               },
-              { "id": "github",
+              { "id": "lib-messaging-rabbit-mq",
                 "url": "https://maven.pkg.github.com/dbacilio88/lib-messaging-rabbit-mq"
               }
             ]
