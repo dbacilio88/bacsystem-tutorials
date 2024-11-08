@@ -71,7 +71,12 @@ jobs:
           servers: >
             [
               {
-                "id":"github",
+                "id":"lib-web-services-soap",
+                "username":"${{ github.actor }}",
+                "password":"${{ secrets.GITHUB_TOKEN }}"
+              },
+              {
+                "id":"lib-messaging-rabbit-mq",
                 "username":"${{ github.actor }}",
                 "password":"${{ secrets.GITHUB_TOKEN }}"
               }
