@@ -38,23 +38,23 @@ jobs:
         id: get_java_version
         run: |
           JAVA_VERSION=""
-          for pom in $(find . -name "pom.xml"); do
-            echo "Found java.version $pom"
-            version=$(xmllint --xpath "string(//properties/java.version | //maven.compiler.source | //maven.compiler.target)" $pom)
-            echo "Found properties $version"
-            if [ ! -z "$version" ] && [ "$JAVA_VERSION" != "$version" ]; then
-              echo "Found java.version $version in $pom"
-              JAVA_VERSION=$version
-            fi
-          done
+           for pom in $(find . -name "pom.xml"); do
+             echo "Found java.version $pom"
+             version=$(xmllint --xpath "string(//properties/java.version | //maven.compiler.source | //maven.compiler.target)" $pom)
+             echo "Found properties $version"
+             if [ ! -z "$version" ] && [ "$JAVA_VERSION" != "$version" ]; then
+               echo "Found java.version $version in $pom"
+               JAVA_VERSION=$version
+             fi
+           done
           
-          if [ -z "$JAVA_VERSION" ]; then
-            echo "No java.version found in any pom.xml"
-            exit 1
-          fi
+           if [ -z "$JAVA_VERSION" ]; then
+             echo "No java.version found in any pom.xml"
+             exit 1
+           fi
           
-          echo "Using Java version: $JAVA_VERSION"
-          echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
+           echo "Using Java version: $JAVA_VERSION"
+           echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
 
       - name: Set up JDK based on pom.xml version
         uses: actions/setup-java@v4
