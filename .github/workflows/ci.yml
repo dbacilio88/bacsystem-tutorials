@@ -41,6 +41,7 @@ jobs:
           for pom in $(find . -name "pom.xml"); do
             echo "Found java.version $pom"
             version=$(xmllint --xpath "string(//properties/java.version | //java.version)" $pom)
+            echo "Found properties $version"
             if [ ! -z "$version" ] && [ "$JAVA_VERSION" != "$version" ]; then
               echo "Found java.version $version in $pom"
               JAVA_VERSION=$version
