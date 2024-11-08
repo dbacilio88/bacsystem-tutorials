@@ -36,6 +36,12 @@
                 <artifactId>lib-web-services-soap</artifactId>
                 <version>1.0.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.bacsystem.utils</groupId>
+                <artifactId>lib-messaging-rabbit-mq</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -48,5 +54,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>
