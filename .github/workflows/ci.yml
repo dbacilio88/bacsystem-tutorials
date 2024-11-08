@@ -37,12 +37,25 @@ jobs:
       - name: Get Java version from pom.xml
         id: get_java_version
         run: |
-          JAVA_VERSION=$(mvn help:evaluate -Dexpression=java.version -q -DforceStdout)
-          if [ -z "$JAVA_VERSION" ] || [ "$JAVA_VERSION" == "null" ]; then
-            # Fall back to maven.compiler.source if java.version is not defined
-            JAVA_VERSION=$(mvn help:evaluate -Dexpression=maven.compiler.source -q -DforceStdout)
+          # Buscar la propiedad java.version en todos los pom.xml del proyecto
+          JAVA_VERSION=""
+          for pom in $(find . -name "pom.xml"); do
+            version=$(xmllint --xpath "string(//properties/java.version)" $pom)
+            if [ ! -z "$version" ] && [ "$JAVA_VERSION" != "$version" ]; then
+              echo "Found java.version $version in $pom"
+              # Si ya tenemos una versión, la vamos a sobrescribir solo si es más reciente
+            JAVA_VERSION=$version
+            fi
+          done
+          
+          # Si no encontramos ninguna versión, fallar el flujo de trabajo
+          
+          if [ -z "$JAVA_VERSION" ]; then
+            echo "No java.version found in any pom.xml"
+            exit 1
           fi
-          echo "Java version from pom.xml is $JAVA_VERSION"
+          
+          echo "Using Java version: $JAVA_VERSION"
           echo "JAVA_VERSION=$JAVA_VERSION" >> $GITHUB_ENV
 
       - name: Verify Java version
