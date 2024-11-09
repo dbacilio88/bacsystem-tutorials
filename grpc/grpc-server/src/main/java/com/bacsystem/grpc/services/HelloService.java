@@ -32,9 +32,9 @@ public class HelloService extends HelloServiceGrpc.HelloServiceImplBase {
     public void hello(HelloOuterClass.HelloRequest request, StreamObserver<HelloOuterClass.HelloResponse> responseObserver) {
 
         log.info("start hello from client with request: {}", request);
-
+        final String message = "hello " + request.getHello().getPrefix() + ", " + request.getHello().getFirstName();
         responseObserver.onNext(HelloOuterClass.HelloResponse.newBuilder()
-                .setCustomHello("Hello GO")
+                .setCustomHello(message)
                 .build());
         responseObserver.onCompleted();
     }
