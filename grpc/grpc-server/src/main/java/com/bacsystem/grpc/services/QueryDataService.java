@@ -39,7 +39,9 @@ public class QueryDataService extends QueryDataServiceGrpc.QueryDataServiceImplB
         int pageSize = 200_000;
         var arg = filter(request);
 
+
         super.executeTransactionQuery(request, responseObserver);
+        responseObserver.onCompleted();
     }
 
     private String filter(HelloOuterClass.TransactionQueryRequest request) {
