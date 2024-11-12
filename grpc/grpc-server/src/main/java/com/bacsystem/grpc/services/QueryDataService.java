@@ -10,6 +10,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import proto.HelloOuterClass;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 public class QueryDataService extends QueryDataServiceGrpc.QueryDataServiceImplBase {
 
     private final JdbcTemplate jdbcTemplate;
+    private static final int PAGE_SIZE = 200;
 
     public QueryDataService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -50,7 +52,14 @@ public class QueryDataService extends QueryDataServiceGrpc.QueryDataServiceImplB
     public void executeTransactionQuery(HelloOuterClass.TransactionQueryRequest request, StreamObserver<HelloOuterClass.TransactionQueryResponse> responseObserver) {
         log.info("start transaction query from client with request: {}", request);
 
-        int pageSize = 200_000;
+        try {
+
+        } catch (Exception e) {
+            log.error("Error during transaction query execution", e);
+            responseObserver.onError(e);
+        } finally {
+            responseObserver.onCompleted();
+        }
 
         var statement = statementFilter(request);
 
@@ -60,69 +69,77 @@ public class QueryDataService extends QueryDataServiceGrpc.QueryDataServiceImplB
 
         var totalItems = ObjectUtils.defaultIfNull(jdbcTemplate.queryForObject(countSql, (rs, rowNum) -> rs.getInt(1), arg.toArray()), 0);
 
-        var totalPages = Math.ceil((double) totalItems / pageSize);
+        var totalPages = Math.ceil((double) totalItems / PAGE_SIZE);
         log.info("Total items [{}] Total pages [{}]", totalItems, totalPages);
+        for (int i = 0; i < totalPages; i++) {
+            executeQuery(request, PageRequest.of(i, PAGE_SIZE)).getContent()
+                    .stream()
+                    .parallel()
+                    .map(dataMap -> {
+                        var transactionQueryResponse = HelloOuterClass.TransactionQueryResponse.newBuilder();
+                        dataMap.forEach((key, value) -> transactionQueryResponse.addRecordDetail(HelloOuterClass.RecordDetail.newBuilder()
+                                .setKey(key)
+                                .setValue(Objects.toString(value, StringUtils.EMPTY))
+                                .build()));
+                        return transactionQueryResponse;
+                    })
+                    .toList()
+                    .forEach(builder -> {
+                        responseObserver.onNext(builder.build());
+                    });
+        }
+        responseObserver.onCompleted();
 
-
-
-        log.info("Count sql [{}]", countSql);
-
-        log.info("statement: {}", statement);
-
-
-        super.executeTransactionQuery(request, responseObserver);
     }
 
     private String statementFilter(HelloOuterClass.TransactionQueryRequest request) {
-        String statementFilter = StringUtils.EMPTY;
-        var fieldFilter = request.getTransactionQueryFilterList()
+        String filterClause = request.getTransactionQueryFilterList()
                 .stream()
                 .sorted(Comparator.comparing(HelloOuterClass.TransactionQueryFilter::getMappingSqlModel))
-                .map(transactionQueryFilter -> {
-                    String model = StringUtility.replaceSql(transactionQueryFilter.getMappingSqlModel());
-                    var operator = Operator.getOperator(transactionQueryFilter.getOperator()).getSymbol();
-                    return String.format("%s %s ?", model, operator);
-                }).collect(Collectors.joining(" AND "));
-
-        log.info("statement {}", statementFilter);
-        log.info("filter {}", fieldFilter);
-
-        if (StringUtils.isNotBlank(fieldFilter)) {
-            statementFilter = String.format(" WHERE %s", fieldFilter);
-        }
-
-        log.info("statement {}", statementFilter);
-        return statementFilter;
-
+                .map(filter -> String.format("%s %s ?",
+                        StringUtility.replaceSql(filter.getMappingSqlModel()),
+                        Operator.getOperator(filter.getOperator()).getSymbol()))
+                .collect(Collectors.joining(" AND "));
+        return StringUtils.isNotBlank(filterClause) ? " WHERE " + filterClause : StringUtils.EMPTY;
     }
 
-    private ArrayList<Object> argumentFilter(HelloOuterClass.TransactionQueryRequest request) {
-        return new ArrayList<>(request.getTransactionQueryFilterList()
+    private List<Object> argumentFilter(HelloOuterClass.TransactionQueryRequest request) {
+        return request.getTransactionQueryFilterList()
                 .stream()
                 .sorted(Comparator.comparing(HelloOuterClass.TransactionQueryFilter::getOrder))
                 .map(HelloOuterClass.TransactionQueryFilter::getValue)
                 .map(StringUtility::replaceSql)
-                .toList());
+                .collect(Collectors.toList());
+    }
+
+    private String query(HelloOuterClass.TransactionQueryRequest request) {
+        return request.getTransactionQueryDetailList()
+                .stream()
+                .sorted(Comparator.comparing(HelloOuterClass.TransactionQueryDetail::getOrder))
+                .map(transactionQueryDetail -> String.format("%s AS %s", transactionQueryDetail.getMappingSqlModel(), transactionQueryDetail.getName()))
+                .collect(Collectors.joining(", "));
     }
 
 
     private Page<Map<String, String>> executeQuery(HelloOuterClass.TransactionQueryRequest request, Pageable pageable) {
         log.info("Execute query on View [{}] on page [{}]", request.getNameView(), pageable.getPageNumber());
+
         List<Map<String, String>> dataCollection = new ArrayList<>();
-        var statement = statementFilter(request);
 
-        var fieldQuery = request.getTransactionQueryDetailList()
-                .stream()
-                .sorted(Comparator.comparing(HelloOuterClass.TransactionQueryDetail::getOrder))
-                .map(transactionQueryDetail -> String.format("%s AS %s", transactionQueryDetail.getMappingSqlModel(), transactionQueryDetail.getName()))
-                .collect(Collectors.joining(", "));
+        String statement = statementFilter(request);
 
-        var rawQuery = String.format("SELECT * FROM (SELECT m.*, ROWNUM rnum FROM (SELECT %s FROM %s %s ) m WHERE ROWNUM <= ?) WHERE rnum > ?", fieldQuery, request.getNameView(), statement);
-        log.info("Fields query [{}]", fieldQuery);
+        final String query = query(request);
+
+
+        var rawQuery = String.format("SELECT * FROM (SELECT m.*, ROWNUM rnum FROM (SELECT %s FROM %s %s ) m WHERE ROWNUM <= ?) WHERE rnum > ?", query, request.getNameView(), statement);
+
+       // final String query = "SELECT * FROM (SELECT %s FROM %s %s) LIMIT ? OFFSET ?";
+
+        log.info("Fields query [{}]", query);
         log.info("Raw query [{}]", rawQuery);
 
         var arg = argumentFilter(request);
-        log.info("arg [{}]", arg);
+
         arg.add(pageable.getOffset() + pageable.getPageSize());
         arg.add(pageable.getOffset());
 

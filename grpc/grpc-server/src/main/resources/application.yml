@@ -30,7 +30,7 @@ logging:
         sql: info
         type: info
     web: info
-    sql: info
+    sql: trace
 
 # app swagger configuration
 springdoc:

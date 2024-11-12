@@ -88,8 +88,9 @@ message TransactionQueryFilter{
 
 message TransactionQueryRequest{
   string name_view = 1;
-  repeated TransactionQueryDetail transaction_query_detail = 2;
-  repeated TransactionQueryFilter transaction_query_filter = 3;
+  int32  database = 2;
+  repeated TransactionQueryDetail transaction_query_detail = 3;
+  repeated TransactionQueryFilter transaction_query_filter = 4;
 }
 
 message RecordDetail{
