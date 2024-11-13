@@ -23,32 +23,48 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # strategy:
+    #  matrix:
+    #    java-version: [ '8','11','17','21' ]
     permissions:
       contents: read
       packages: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 11
+      #- name: Set up JDK ${{ matrix.java-version }}
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          #java-version: ${{ matrix.java-version }}
+          #java-version: ${{ env.JAVA_VERSION }}
+          java-version: 21
           distribution: 'temurin'
           server-id: github
           settings-path: ${{ github.workspace }}
+
       - uses: whelk-io/maven-settings-xml-action@v22
         with:
           repositories: >
             [
-              { "id": "github",
+              { "id": "lib-web-services-soap",
                 "url": "https://maven.pkg.github.com/dbacilio88/lib-web-services-soap"
+              },
+              { "id": "lib-messaging-rabbit-mq",
+                "url": "https://maven.pkg.github.com/dbacilio88/lib-messaging-rabbit-mq"
               }
             ]
           servers: >
             [
               {
-                "id":"github",
+                "id":"lib-web-services-soap",
+                "username":"${{ github.actor }}",
+                "password":"${{ secrets.GITHUB_TOKEN }}"
+              },
+              {
+                "id":"lib-messaging-rabbit-mq",
                 "username":"${{ github.actor }}",
                 "password":"${{ secrets.GITHUB_TOKEN }}"
               }

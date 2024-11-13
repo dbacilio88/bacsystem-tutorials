@@ -26,9 +26,9 @@
     </developers>
 
     <properties>
+        <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -164,20 +164,5 @@
 
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/dbacilio88/lib-web-services-soap</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub dbacilio88 Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/dbacilio88/lib-web-services-soap</url>
-        </repository>
-    </distributionManagement>
 
 </project>
