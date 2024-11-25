@@ -1,0 +1,61 @@
+# app server configuration:
+server:
+  port: 8002
+  compression:
+    enabled: true
+  netty:
+    connection-timeout: 5000
+    idle-timeout: 60000
+
+  error:
+    include-stacktrace: never
+    include-message: always
+
+# app spring configuration:
+spring:
+  application:
+    name: files-upload
+  banner:
+    location: 'classpath:/banner.txt'
+  webflux:
+    base-path: /files-upload/v1
+
+# app logging configuration:
+logging:
+  level:
+    com.bacsystem: info
+    root: info
+    org:
+      hibernate:
+        sql: info
+        type: info
+    web: info
+    sql: trace
+
+# app swagger configuration
+springdoc:
+  api-docs:
+    enabled: true
+# app health configuration:
+management:
+  info:
+    git:
+      enabled: true
+      mode: full
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    db:
+      enabled: true
+    liveness-state:
+      enabled: true
+    readiness-state:
+      enabled: true
+
+# app grpc configuration:
+grpc:
+  server:
+    port: 9091
+    max-inbound-message-size: 20000000

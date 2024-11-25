@@ -77,30 +77,6 @@ public class QueryDataService extends QueryDataServiceGrpc.QueryDataServiceImplB
                 for (HelloOuterClass.TransactionQueryResponse r : response) {
                     responseObserver.onNext(r);
                 }
-
-/*
-
-                executeQuery(request, PageRequest.of(i, PAGE_SIZE)).getContent()
-                        .stream()
-                        .parallel()
-                        .map(dataMap -> {
-                            log.info("dataMap {}", dataMap);
-                            var transactionQueryResponse = HelloOuterClass.TransactionQueryResponse.newBuilder();
-                            dataMap.forEach((key, value) -> {
-                                transactionQueryResponse.addRecordDetail(HelloOuterClass.RecordDetail.newBuilder()
-                                        .setKey(key)
-                                        .setValue(Objects.toString(value, StringUtils.EMPTY))
-                                        .build());
-                            });
-                            return transactionQueryResponse.build();
-                        })
-                        .toList()
-                        .forEach(transactionQueryResponse -> {
-                            log.info("transactionQueryResponse {}", transactionQueryResponse);
-                            responseObserver.onNext(transactionQueryResponse);
-                        });
-
- */
             }
         } catch (Exception e) {
             log.error("Error during transaction query execution", e);

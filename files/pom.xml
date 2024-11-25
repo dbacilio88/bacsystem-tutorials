@@ -8,15 +8,15 @@
         <artifactId>parent-spring-3</artifactId>
         <version>1.0.0</version>
         <relativePath>../parent-spring-3/pom.xml</relativePath>
+
     </parent>
 
-    <artifactId>grpc</artifactId>
+    <artifactId>files</artifactId>
     <packaging>pom</packaging>
-
     <modules>
-        <module>grpc-server</module>
-        <module>grpc-client</module>
+        <module>files-upload</module>
     </modules>
+
 
     <properties>
         <java.version>21</java.version>

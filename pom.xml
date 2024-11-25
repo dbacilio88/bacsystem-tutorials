@@ -35,6 +35,7 @@
         <module>grpc</module>
         <module>rabbit</module>
         <module>parent-spring-3</module>
+        <module>files</module>
     </modules>
 
     <properties>

@@ -9,7 +9,7 @@ spring:
     open-in-view: false                   # Controla si Hibernate debe mantener la sesión abierta durante toda la vista
     show-sql: true
     hibernate:
-      ddl-auto: create                      # Puede ser: none, validate, update, create, create-drop
+      ddl-auto: none                      # Puede ser: none, validate, update, create, create-drop
     properties:
       hibernate:
         format_sql: true                  # Formatea las consultas SQL para mayor legibilidad
