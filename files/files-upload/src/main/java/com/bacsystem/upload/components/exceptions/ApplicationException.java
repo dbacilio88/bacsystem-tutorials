@@ -1,7 +1,7 @@
 package com.bacsystem.upload.components.exceptions;
 
 
-import com.bacsystem.upload.components.utils.ResponseCode;
+import com.bacsystem.microservices.components.enums.ResponseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

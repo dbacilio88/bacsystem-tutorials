@@ -1,9 +1,11 @@
 package com.bacsystem.upload.components.exceptions.handlers;
 
 
+import com.bacsystem.microservices.components.exceptions.MicroservicesException;
+import com.bacsystem.microservices.dtos.response.ApplicationResponse;
+import com.bacsystem.microservices.dtos.response.BaseResponse;
 import com.bacsystem.upload.components.exceptions.ApplicationException;
-import com.bacsystem.upload.components.utils.response.ApplicationResponse;
-import com.bacsystem.upload.components.utils.response.ResponseBase;
+
 import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -36,10 +38,20 @@ public class ApplicationGlobalHandler {
 
     private final ApplicationResponse applicationResponse;
 
+    @ExceptionHandler(MicroservicesException.class)
+    public Mono<ResponseEntity<Object>> handlerMicroservice(MicroservicesException exception) {
+        return applicationResponse.getResponseError(
+                BaseResponse.builder()
+                        .code(exception.getResponseCode().getCode())
+                        .message(exception.getMessage())
+                        .build(), exception.getResponseCode().getCode()
+        );
+    }
+
     @ExceptionHandler(ApplicationException.class)
     public Mono<ResponseEntity<Object>> handlerException(ApplicationException exception) {
         return applicationResponse.getResponseError(
-                ResponseBase.builder()
+                BaseResponse.builder()
                         .code(exception.getResponseCode().getCode())
                         .message(exception.getMessage())
                         .build(), exception.getResponseCode().getCode()
@@ -49,7 +61,7 @@ public class ApplicationGlobalHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public Mono<ResponseEntity<Object>> constraintViolationException(ConstraintViolationException exception) {
         return applicationResponse.getResponseError(
-                ResponseBase.builder()
+                BaseResponse.builder()
                         .code(400)
                         .errors(exception
                                 .getConstraintViolations()

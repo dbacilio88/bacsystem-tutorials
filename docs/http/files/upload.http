@@ -1,0 +1,4 @@
+### GET request to files status by uuid server
+GET http://localhost:8002/files-upload/v1/status/id/cb2a2afb-6f9d-4fb1-a99e-a028701866d0
+
+###
