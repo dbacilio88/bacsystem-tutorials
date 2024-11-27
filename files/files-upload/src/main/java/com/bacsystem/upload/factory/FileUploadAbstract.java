@@ -5,7 +5,7 @@ import com.bacsystem.microservices.dtos.response.GenericResponse;
 import com.bacsystem.microservices.dtos.response.ProcessResponse;
 import com.bacsystem.upload.dtos.response.FileDataResponse;
 import com.bacsystem.upload.projections.IFileDataInformation;
-import com.bacsystem.upload.repositories.entities.FileDataEntity;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -58,7 +58,7 @@ public abstract class FileUploadAbstract {
                 });
     }
 
-    public abstract Mono<FileDataEntity> create(DataBuffer dataBuffer);
+    public abstract Mono<DataFileEntity> create(DataBuffer dataBuffer);
 
     public Mono<ProcessResponse>getUploadFile(final IFileDataInformation fileDataInformation){
         return this.setFileDataResponseMono(fileDataInformation)

@@ -3,7 +3,8 @@ package com.bacsystem.upload.handler;
 
 import com.bacsystem.microservices.dtos.response.ApplicationResponse;
 import com.bacsystem.microservices.dtos.response.ServerBaseResponse;
-import com.bacsystem.upload.services.contracts.IFileStatusService;
+import com.bacsystem.upload.dtos.request.PageStatusRequest;
+import com.bacsystem.upload.services.contracts.IDataStatusService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -31,10 +32,10 @@ import reactor.core.publisher.Mono;
 @Component
 public class FileStatusHandler extends ServerBaseResponse {
 
-    private final IFileStatusService fileStatusService;
+    private final IDataStatusService fileStatusService;
 
     public FileStatusHandler(final ApplicationResponse applicationResponse,
-                             final IFileStatusService fileStatusService) {
+                             final IDataStatusService fileStatusService) {
         super(applicationResponse);
         this.fileStatusService = fileStatusService;
     }
@@ -42,6 +43,14 @@ public class FileStatusHandler extends ServerBaseResponse {
         final String uuId = request.pathVariable("uuId");
         log.info("init process get file status [{}]", uuId);
         return this.fileStatusService.findByUuId(uuId)
+                .flatMap(this::response);
+    }
+    public Mono<ServerResponse> doOnGetAllStatus(ServerRequest request) {
+
+        log.info("init process get all file status [{}]", request);
+        return this.fileStatusService.findAll(PageStatusRequest.builder()
+                        .page(1)
+                        .build())
                 .flatMap(this::response);
     }
     /*

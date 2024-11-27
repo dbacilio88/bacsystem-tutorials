@@ -37,6 +37,7 @@
         <module>parent-spring-3</module>
         <module>files</module>
         <module>utils</module>
+        <module>tools</module>
     </modules>
 
     <properties>

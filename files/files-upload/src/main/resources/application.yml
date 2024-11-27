@@ -27,8 +27,12 @@ logging:
     root: info
     org:
       hibernate:
-        sql: info
-        type: info
+        sql: trace
+        type: trace
+      type:
+        descriptor:
+          sql:
+            BasicBinder: trace
     web: info
     sql: trace
 

@@ -1,7 +1,7 @@
 package com.bacsystem.upload.factory;
 
 
-import com.bacsystem.upload.repositories.entities.FileDataEntity;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 public class DataAdvanceService extends FileUploadAbstract {
 
     @Override
-    public Mono<FileDataEntity> create(DataBuffer dataBuffer) {
+    public Mono<DataFileEntity> create(DataBuffer dataBuffer) {
         return null;
     }
 }

@@ -1,11 +1,14 @@
 package com.bacsystem.upload.components.helpers;
 
 
+import com.bacsystem.microservices.components.enums.ResponseCode;
+import com.bacsystem.upload.components.exceptions.ApplicationException;
 import lombok.experimental.UtilityClass;
 import reactor.core.publisher.Mono;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.TimeZone;
@@ -41,5 +44,24 @@ public class FileHelper {
                    format.setTimeZone(TimeZone.getTimeZone(ZoneOffset.UTC));
                    return format.format(d);
                 }).switchIfEmpty(Mono.just(""));
+    }
+
+    public static Mono<Boolean>doOnDateIsAfter(LocalDate start, LocalDate end) {
+        return Mono.just(start)
+                .filter(date->date.isAfter(end))
+                .flatMap(date-> Mono.error(new ApplicationException("the date must be less than or equals to", ResponseCode.NOT_FOUND)))
+                .switchIfEmpty(Mono.just(false))
+                .hasElement();
+    }
+
+    public static Mono<Boolean>doOnDateIsNotNull(LocalDate start, LocalDate end) {
+        return Mono.just(true)
+                .filter(date->(start==null&& end!=null)||(start!=null&& end==null))
+                .flatMap(date-> Mono.error(new ApplicationException("the date from and date to are required", ResponseCode.NOT_FOUND)))
+                .switchIfEmpty(Mono.just(false))
+                .hasElement();
+    }
+    public static Mono<LocalDate>doOnDate(LocalDate date, LocalDate defaultDate) {
+        return Mono.justOrEmpty(date).switchIfEmpty(Mono.just(defaultDate));
     }
 }

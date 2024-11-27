@@ -3,7 +3,7 @@ package com.bacsystem.upload.services;
 
 import com.bacsystem.microservices.dtos.response.ProcessResponse;
 import com.bacsystem.upload.factory.IFileUploadFactory;
-import com.bacsystem.upload.services.contracts.IFileDataService;
+import com.bacsystem.upload.services.contracts.IDataFileService;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -28,10 +28,10 @@ import reactor.core.publisher.Mono;
 public class FileUploadService implements IFileUploadService {
 
     private final IFileUploadFactory fileFactory;
-    private final IFileDataService fileDataService;
+    private final IDataFileService fileDataService;
 
     public FileUploadService(final IFileUploadFactory fileFactory,
-                             final IFileDataService fileDataService) {
+                             final IDataFileService fileDataService) {
         this.fileFactory = fileFactory;
         this.fileDataService = fileDataService;
     }

@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * <b>FileStatusEntity</b>
+ * <b>DataFileEntity</b>
  * <p>
- * This class specifies the requirements for the {@link FileStatusEntity} component,
+ * This class specifies the requirements for the {@link DataFileEntity} component,
  * developed in accordance with the development standards established by christian.
  * Collaboration is encouraged for the enhancement and expansion of the bacsystem-tutorials.
  * </p>
@@ -23,7 +23,7 @@ import java.time.Instant;
  *
  * @author christian
  * @author dbacilio88@outllok.es
- * @since 24/11/2024
+ * @since 25/11/2024
  */
 
 @Data
@@ -31,22 +31,31 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "DATA_STATUS")
-public class FileStatusEntity {
+@Table(name = "DATA_FILE")
+public class DataFileEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "DS_ID", nullable = false, unique = true)
+    @Column(name = "DF_ID", nullable = false, unique = true)
     private Long id;
 
-    @Column(name = "DS_UUID", nullable = false, unique = true,length = 36)
+    @Column(name = "DF_UUID", nullable = false, unique = true,length = 36)
     private String uuId;
 
-    @Column(name = "DS_NAME", nullable = false, unique = true,length = 100)
+    @Column(name = "DF_NAME", nullable = false, unique = true,length = 100)
     private String name;
 
-    @Column(name = "DS_DESCRIPTION", nullable = false, unique = true,length = 100)
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "DF_TYPE", nullable = false)
+    private DataTypeEntity type;
 
-    @Column(name = "DS_CREATED")
+    @ManyToOne
+    @JoinColumn(name = "DF_STATUS", nullable = false)
+    private DataStatusEntity status;
+
+    @Column(name = "DF_SIZE")
+    private Integer size;
+
+    @Column(name = "DF_CREATED")
     private Instant created;
 }

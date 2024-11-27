@@ -2,6 +2,8 @@ package com.bacsystem.upload.handler.routes;
 
 
 import com.bacsystem.upload.handler.FileStatusHandler;
+import com.bacsystem.upload.handler.FileTypeHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +15,9 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 /**
- * <b>FileStatusRouterFunction</b>
+ * <b>FileRouterFunction</b>
  * <p>
- * This class specifies the requirements for the {@link FileStatusRouterFunction} component,
+ * This class specifies the requirements for the {@link FileRouterFunction} component,
  * developed in accordance with the development standards established by christian.
  * Collaboration is encouraged for the enhancement and expansion of the bacsystem-tutorials.
  * </p>
@@ -26,18 +28,15 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
  *
  * @author christian
  * @author dbacilio88@outllok.es
- * @since 24/11/2024
+ * @since 25/11/2024
  */
-
 @Log4j2
 @Configuration
-public class FileStatusRouterFunction {
+@RequiredArgsConstructor
+public class FileRouterFunction {
 
+    private final FileTypeHandler fileTypeHandler;
     private final FileStatusHandler fileStatusHandler;
-
-    public FileStatusRouterFunction(FileStatusHandler fileStatusHandler) {
-        this.fileStatusHandler = fileStatusHandler;
-    }
 
     @Bean
     public WebProperties.Resources webProperties() {
@@ -46,8 +45,10 @@ public class FileStatusRouterFunction {
 
     @Bean
     public RouterFunction<ServerResponse> routes() {
-        return route(GET("/status/id/{uuId}"), fileStatusHandler::doOnGetStatus);
-                //.andRoute(POST("/status"),this.fileStatusHandler::doOnSaveStatus);
+        return route(GET("/status/id/{uuId}"), fileStatusHandler::doOnGetStatus)
+                .andRoute(GET("/status"), fileStatusHandler::doOnGetAllStatus)
+                .andRoute(GET("/type/id/{uuId}"),fileTypeHandler::doOnGetType);
 
     }
+
 }

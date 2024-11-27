@@ -3,9 +3,9 @@ package com.bacsystem.upload.services.implementations;
 
 import com.bacsystem.microservices.components.utils.Utility;
 import com.bacsystem.upload.projections.IFileDataInformation;
-import com.bacsystem.upload.repositories.IFileDataRepository;
-import com.bacsystem.upload.repositories.entities.FileDataEntity;
-import com.bacsystem.upload.services.contracts.IFileDataService;
+import com.bacsystem.upload.repositories.IDataFileRepository;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
+import com.bacsystem.upload.services.contracts.IDataFileService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -13,9 +13,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
- * <b>FileDataService</b>
+ * <b>DataFileService</b>
  * <p>
- * This class specifies the requirements for the {@link FileDataService} component,
+ * This class specifies the requirements for the {@link DataFileService} component,
  * developed in accordance with the development standards established by christian.
  * Collaboration is encouraged for the enhancement and expansion of the bacsystem-tutorials.
  * </p>
@@ -31,26 +31,26 @@ import java.util.List;
 
 @Log4j2
 @Service
-public class FileDataService implements IFileDataService {
+public class DataFileService implements IDataFileService {
 
-    private final IFileDataRepository fileDataRepository;
+    private final IDataFileRepository fileDataRepository;
 
-    public FileDataService(final IFileDataRepository fileDataRepository) {
+    public DataFileService(final IDataFileRepository fileDataRepository) {
         this.fileDataRepository = fileDataRepository;
     }
 
     @Override
-    public Mono<List<FileDataEntity>> findAll() {
+    public Mono<List<DataFileEntity>> findAll() {
         return null;
     }
 
     @Override
-    public Mono<FileDataEntity> findById(Long id) {
+    public Mono<DataFileEntity> findById(Long id) {
         return null;
     }
 
     @Override
-    public Mono<FileDataEntity> findByName(String name) {
+    public Mono<DataFileEntity> findByName(String name) {
         return null;
     }
 
@@ -62,17 +62,17 @@ public class FileDataService implements IFileDataService {
     }
 
     @Override
-    public Mono<FileDataEntity> save(FileDataEntity entity) {
+    public Mono<DataFileEntity> save(DataFileEntity entity) {
         return null;
     }
 
     @Override
-    public Mono<FileDataEntity> update(FileDataEntity entity) {
+    public Mono<DataFileEntity> update(DataFileEntity entity) {
         return null;
     }
 
     @Override
-    public Mono<FileDataEntity> delete(Long id) {
+    public Mono<DataFileEntity> delete(Long id) {
         return null;
     }
 }

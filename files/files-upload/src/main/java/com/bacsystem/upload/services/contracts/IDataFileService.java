@@ -2,15 +2,15 @@ package com.bacsystem.upload.services.contracts;
 
 
 import com.bacsystem.upload.projections.IFileDataInformation;
-import com.bacsystem.upload.repositories.entities.FileDataEntity;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 /**
- * <b>IFileDataService</b>
+ * <b>IDataFileService</b>
  * <p>
- * This class specifies the requirements for the {@link IFileDataService} component,
+ * This class specifies the requirements for the {@link IDataFileService} component,
  * developed in accordance with the development standards established by christian.
  * Collaboration is encouraged for the enhancement and expansion of the bacsystem-tutorials.
  * </p>
@@ -24,15 +24,15 @@ import java.util.List;
  * @since 25/11/2024
  */
 
-public interface IFileDataService {
-    //Mono<FileDataEntity> createFileDataInformation(final String fileName,final String type);
+public interface IDataFileService {
+    //Mono<DataFileEntity> createFileDataInformation(final String fileName,final String type);
     //Mono<IFileDataInformation>getFileDataInformation(String uuId);
 
-    Mono<List<FileDataEntity>> findAll();
-    Mono<FileDataEntity> findById(Long id);
-    Mono<FileDataEntity> findByName(String name);
+    Mono<List<DataFileEntity>> findAll();
+    Mono<DataFileEntity> findById(Long id);
+    Mono<DataFileEntity> findByName(String name);
     Mono<IFileDataInformation> findByUuId(String uuId);
-    Mono<FileDataEntity> save(FileDataEntity entity);
-    Mono<FileDataEntity> update(FileDataEntity entity);
-    Mono<FileDataEntity> delete(Long id);
+    Mono<DataFileEntity> save(DataFileEntity entity);
+    Mono<DataFileEntity> update(DataFileEntity entity);
+    Mono<DataFileEntity> delete(Long id);
 }

@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 /**
- * <b>FileTypeEntity</b>
+ * <b>DataTypeEntity</b>
  * <p>
- * This class specifies the requirements for the {@link FileTypeEntity} component,
+ * This class specifies the requirements for the {@link DataTypeEntity} component,
  * developed in accordance with the development standards established by christian.
  * Collaboration is encouraged for the enhancement and expansion of the bacsystem-tutorials.
  * </p>
@@ -31,7 +31,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "DATA_TYPE")
-public class FileTypeEntity {
+public class DataTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DT_ID", nullable = false, unique = true)

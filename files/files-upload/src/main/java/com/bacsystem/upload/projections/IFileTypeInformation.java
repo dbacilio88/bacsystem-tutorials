@@ -1,6 +1,8 @@
 package com.bacsystem.upload.projections;
 
 
+import java.time.Instant;
+
 /**
  * <b>IFileTypeInformation</b>
  * <p>
@@ -23,5 +25,5 @@ public interface IFileTypeInformation {
     String getUuId();
     String getName();
     String getDescription();
-    String getCreated();
+    Instant getCreated();
 }

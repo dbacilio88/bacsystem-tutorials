@@ -2,7 +2,7 @@ package com.bacsystem.upload.services;
 
 
 import com.bacsystem.upload.components.helpers.FileZipHelper;
-import com.bacsystem.upload.repositories.entities.FileDataEntity;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -34,7 +34,7 @@ public class CreateFileService implements ICreateFileService {
 
     private final FileZipHelper fileZipHelper;
     @Override
-    public Mono<FileDataEntity> createFile(DataBuffer dataBuffer) {
+    public Mono<DataFileEntity> createFile(DataBuffer dataBuffer) {
         return null;
     }
 }
