@@ -36,10 +36,9 @@ public abstract class FileUploadAbstract {
 
     public Mono<ProcessResponse> createFile(final String type, final FilePart filePart){
         log.info("upload file type [{}]", type);
-
         return Mono.just(filePart)
                 .flatMap(file-> DataBufferUtils.join(filePart.content())
-                        .flatMap(dataBuffer -> this.create(dataBuffer))
+                        .flatMap(this::create)
                         .flatMap(entity->{
                             final FileDataResponse response = FileDataResponse
                                     .builder()

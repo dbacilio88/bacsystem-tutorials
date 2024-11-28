@@ -2,12 +2,11 @@ package com.bacsystem.upload.services;
 
 
 import com.bacsystem.upload.components.helpers.FileZipHelper;
-import com.bacsystem.upload.repositories.entities.DataFileEntity;
+import com.bacsystem.upload.components.validators.FileValidatorHelper;
+import com.bacsystem.upload.repositories.IDataFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 /**
  * <b>CreateFileService</b>
@@ -33,8 +32,15 @@ public class CreateFileService implements ICreateFileService {
 
 
     private final FileZipHelper fileZipHelper;
+    private final FileValidatorHelper fileValidatorHelper;
+    private final IDataFileRepository dataFileRepository;
+/*
     @Override
-    public Mono<DataFileEntity> createFile(DataBuffer dataBuffer) {
-        return null;
+    public Mono<DataFileEntity> createFile(DataBuffer dataBuffer, FileTypeConfiguration fileTypeConfiguration) {
+        return this.fileZipHelper.doOnUnZip(dataBuffer)
+                .flatMap(fileZip ->fileValidatorHelper.doOnValidateFile(fileZip.getFileName(),fileZip.getBuffer(),fileTypeConfiguration))
+                .flatMap();
     }
+
+ */
 }

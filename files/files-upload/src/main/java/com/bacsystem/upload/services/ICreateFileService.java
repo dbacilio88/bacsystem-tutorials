@@ -1,10 +1,6 @@
 package com.bacsystem.upload.services;
 
 
-import com.bacsystem.upload.repositories.entities.DataFileEntity;
-import org.springframework.core.io.buffer.DataBuffer;
-import reactor.core.publisher.Mono;
-
 /**
  * <b>ICreateFileService</b>
  * <p>
@@ -24,5 +20,5 @@ import reactor.core.publisher.Mono;
 
 public interface ICreateFileService {
 
-    Mono<DataFileEntity>createFile(DataBuffer dataBuffer);
+    //Mono<DataFileEntity>createFile(DataBuffer dataBuffer, FileTypeConfiguration fileTypeConfiguration);
 }
