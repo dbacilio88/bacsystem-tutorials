@@ -3,6 +3,7 @@ package com.bacsystem.upload.components.helpers;
 
 import com.bacsystem.microservices.components.enums.ResponseCode;
 import com.bacsystem.upload.components.exceptions.ApplicationException;
+import com.bacsystem.upload.dtos.FileTypeConfiguration;
 import lombok.experimental.UtilityClass;
 import reactor.core.publisher.Mono;
 
@@ -11,7 +12,10 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Objects;
 import java.util.TimeZone;
+
+import static io.micrometer.common.util.StringUtils.isBlank;
 
 /**
  * <b>FileHelper</b>
@@ -63,5 +67,13 @@ public class FileHelper {
     }
     public static Mono<LocalDate>doOnDate(LocalDate date, LocalDate defaultDate) {
         return Mono.justOrEmpty(date).switchIfEmpty(Mono.just(defaultDate));
+    }
+
+    public static Mono<Boolean>doOnValidateFileName(String fileName, FileTypeConfiguration fileTypeConfiguration) {
+        return Mono.just(isBlank(fileName))
+                .filter(file-> !file)
+                .flatMap(file-> Mono.just(Objects.isNull(fileTypeConfiguration)||isBlank(fileTypeConfiguration.getFileNamePattern())|| fileName.matches(fileTypeConfiguration.getFileNamePattern())))
+                .flatMap(Mono::just)
+                .switchIfEmpty(Mono.just(false));
     }
 }

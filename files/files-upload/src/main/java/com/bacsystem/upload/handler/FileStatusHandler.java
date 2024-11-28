@@ -46,7 +46,6 @@ public class FileStatusHandler extends ServerBaseResponse {
                 .flatMap(this::response);
     }
     public Mono<ServerResponse> doOnGetAllStatus(ServerRequest request) {
-
         log.info("init process get all file status [{}]", request);
         return this.fileStatusService.findAll(PageStatusRequest.builder()
                         .page(1)
