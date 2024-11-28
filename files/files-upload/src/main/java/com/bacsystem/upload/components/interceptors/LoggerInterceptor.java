@@ -1,9 +1,10 @@
 package com.bacsystem.upload.components.interceptors;
 
 
+import com.bacsystem.microservices.components.decorators.HttpRequestDecorator;
+import com.bacsystem.microservices.components.decorators.HttpResponseDecorator;
+import com.bacsystem.microservices.components.interceptors.CommonLoggerInterceptor;
 import com.bacsystem.upload.components.constants.ApplicationConstant;
-import com.bacsystem.upload.components.decorator.HttpRequestDecorator;
-import com.bacsystem.upload.components.decorator.HttpResponseDecorator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;

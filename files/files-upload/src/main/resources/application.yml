@@ -23,12 +23,16 @@ spring:
 # app logging configuration:
 logging:
   level:
-    com.bacsystem: info
+    com.bacsystem.upload: info
     root: info
     org:
       hibernate:
-        sql: info
-        type: info
+        sql: trace
+        type: trace
+      type:
+        descriptor:
+          sql:
+            BasicBinder: trace
     web: info
     sql: trace
 
@@ -53,9 +57,3 @@ management:
       enabled: true
     readiness-state:
       enabled: true
-
-# app grpc configuration:
-grpc:
-  server:
-    port: 9091
-    max-inbound-message-size: 20000000

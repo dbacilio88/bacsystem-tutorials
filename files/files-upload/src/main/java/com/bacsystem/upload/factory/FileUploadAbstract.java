@@ -1,6 +1,11 @@
 package com.bacsystem.upload.factory;
 
 
+import com.bacsystem.microservices.dtos.response.GenericResponse;
+import com.bacsystem.microservices.dtos.response.ProcessResponse;
+import com.bacsystem.upload.dtos.response.FileDataResponse;
+import com.bacsystem.upload.projections.IFileDataInformation;
+import com.bacsystem.upload.repositories.entities.DataFileEntity;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -29,13 +34,18 @@ import reactor.core.publisher.Mono;
 public abstract class FileUploadAbstract {
 
 
-    public Mono<String> uploadFile(final String type, final FilePart filePart){
+    public Mono<ProcessResponse> createFile(final String type, final FilePart filePart){
         log.info("upload file type [{}]", type);
         return Mono.just(filePart)
                 .flatMap(file-> DataBufferUtils.join(filePart.content())
-                        .flatMap(dataBuffer -> this.upload(dataBuffer))
-                        .flatMap(data->{
-                            return Mono.just(data);
+                        .flatMap(this::create)
+                        .flatMap(entity->{
+                            final FileDataResponse response = FileDataResponse
+                                    .builder()
+                                    .id(entity.getId())
+                                    .uuId(entity.getUuId())
+                                    .build();
+                            return Mono.just(ProcessResponse.empty(new GenericResponse<>(response)));
                         }))
                 .doOnSuccess(success-> log.info("successfully upload type {} file {} ",type,filePart.filename()))
                 .doOnError(error->{
@@ -47,6 +57,22 @@ public abstract class FileUploadAbstract {
                 });
     }
 
-    public abstract Mono<String> upload(DataBuffer dataBuffer);
+    public abstract Mono<DataFileEntity> create(DataBuffer dataBuffer);
+
+    public Mono<ProcessResponse>getUploadFile(final IFileDataInformation fileDataInformation){
+        return this.setFileDataResponseMono(fileDataInformation)
+                .flatMap(response-> Mono.just(ProcessResponse.empty(new GenericResponse<>(response))));
+    }
+
+    private Mono<FileDataResponse>setFileDataResponseMono(final IFileDataInformation fileDataInformation){
+        return Mono.just(fileDataInformation)
+                .map(fileData->{
+                    return FileDataResponse.builder().build();
+                }).flatMap(response->{
+                    return Mono.just(response);
+                }).flatMap(response->{
+                    return Mono.just(response);
+                });
+    }
 
 }
