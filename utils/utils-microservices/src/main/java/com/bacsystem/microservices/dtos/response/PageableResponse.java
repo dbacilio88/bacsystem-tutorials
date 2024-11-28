@@ -82,7 +82,7 @@ public class PageableResponse implements Serializable {
 
     private static String getPageUrl(Integer page, PageRequest pageRequest) {
 
-        String pageUrl = String.format("?page=%s&top=%s", page, pageRequest.getLimit());
+        String pageUrl = String.format("?page=%s&limit=%s", page, pageRequest.getLimit());
 
         if (Objects.nonNull(pageRequest.getStartDate())) {
             pageUrl += String.format("&startDate=%s", pageRequest.getStartDate());
