@@ -35,7 +35,7 @@ public abstract class FileUploadAbstract {
 
 
     public Mono<ProcessResponse> createFile(final String type, final FilePart filePart){
-        log.info("upload file type [{}]", type);
+        log.info("upload file type [{}]", filePart.content());
         return Mono.just(filePart)
                 .flatMap(file-> DataBufferUtils.join(filePart.content())
                         .flatMap(this::create)

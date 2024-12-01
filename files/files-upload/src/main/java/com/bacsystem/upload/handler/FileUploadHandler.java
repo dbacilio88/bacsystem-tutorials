@@ -42,6 +42,21 @@ public class FileUploadHandler extends ServerBaseResponse {
 
     public Mono<ServerResponse> doOnFileUpload(ServerRequest request) {
         log.info("init process get file request [{}]", request);
+/*
+        return request.multipartData()
+                .flatMap(part-> {
+                    FilePart filePart = (FilePart) part.getFirst("file");
+                    if (filePart == null) {
+
+                        return ServerResponse.badRequest().bodyValue("No file uploaded.");
+                    }
+
+                    return ServerResponse.ok()
+                            .body(BodyInserters.fromValue(filePart.filename()));
+                });
+
+
+ */
         return request.multipartData()
                         .flatMap(formData-> Mono.just(FileUploadRequest.builder()
                                 .file((FilePart) formData.getFirst("file"))
@@ -49,5 +64,6 @@ public class FileUploadHandler extends ServerBaseResponse {
                                 .build()))
                 .flatMap(integer -> this.fileUploadService.createFile(integer.getType(),integer.getFile()))
                 .flatMap(this::response);
+
     }
 }

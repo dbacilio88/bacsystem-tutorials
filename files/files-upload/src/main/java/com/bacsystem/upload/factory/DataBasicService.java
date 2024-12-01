@@ -2,6 +2,7 @@ package com.bacsystem.upload.factory;
 
 
 import com.bacsystem.upload.repositories.entities.DataFileEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -22,11 +23,13 @@ import reactor.core.publisher.Mono;
  * @author dbacilio88@outllok.es
  * @since 25/11/2024
  */
+@Slf4j
 @Component("DATA_BASIC")
 public class DataBasicService extends FileUploadAbstract {
 
     @Override
     public Mono<DataFileEntity> create(DataBuffer dataBuffer) {
-        return null;
+        log.info("Creating file {}", dataBuffer);
+        return Mono.just(DataFileEntity.builder().build());
     }
 }
